@@ -6,10 +6,11 @@ public class playerMovement : MonoBehaviour
 {
 
     public float moveSpeed = 5f;
-    // public float t = 0.5f;
     public float normalSize = 5f;
     public float runningSize = 5.5f;
     public float zoomSpeed = 10f;
+    public float dashStrenght = 10f;
+    public float dashCooldown = 4f;
 
     public Rigidbody2D rb;
 
@@ -17,12 +18,13 @@ public class playerMovement : MonoBehaviour
 
     Vector2 movement;
     Vector2 mousePosition;
+    float lastDash;
 
-    // Update is called once per frame
     void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+        lastDash += Time.deltaTime;
 
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -37,6 +39,15 @@ public class playerMovement : MonoBehaviour
             moveSpeed = 5f;
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, normalSize, t);
         }
+
+        // if (Input.GetKey(KeyCode.Space) && lastDash > dashCooldown)
+        // {
+        //     if (movement != Vector2.zero)
+        //     {
+        //         lastDash = 0;
+        //         rb.MovePosition(rb.position + movement * dashStrenght * Time.fixedDeltaTime);
+        //     }
+        // }
     }
 
     void FixedUpdate()
