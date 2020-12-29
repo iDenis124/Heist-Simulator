@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class playerMovement : MonoBehaviour
 {
-
+    [Header("Movement")]
     public float moveSpeed = 5f;
+    public float runningSpeed = 8f;
+    [Header("Running Camera")]
     public float normalSize = 5f;
     public float runningSize = 5.5f;
     public float zoomSpeed = 10f;
+    [Header("Dashing")]
     public float dashStrenght = 10f;
     public float dashCooldown = 4f;
 
-    public Rigidbody2D rb;
+    public Rigidbody2D player;
 
     public Camera cam;
+
+    public Rigidbody2D gun;
 
     Vector2 movement;
     Vector2 mousePosition;
@@ -28,10 +33,14 @@ public class playerMovement : MonoBehaviour
 
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
+        Vector2 lookDirecton = mousePosition - player.position;
+        float angle = Mathf.Atan2(lookDirecton.y, lookDirecton.x) * Mathf.Rad2Deg;
+        gun.rotation = angle;
+
         float t = Time.deltaTime * zoomSpeed;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            moveSpeed = 7f;
+            moveSpeed = runningSpeed;
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, runningSize, t);
         }
         else
@@ -45,16 +54,14 @@ public class playerMovement : MonoBehaviour
         //     if (movement != Vector2.zero)
         //     {
         //         lastDash = 0;
-        //         rb.MovePosition(rb.position + movement * dashStrenght * Time.fixedDeltaTime);
+        //         player.MovePosition(player.position + movement * dashStrenght * Time.fixedDeltaTime);
         //     }
         // }
     }
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-
-        Vector2 lookDirecton = mousePosition - rb.position;
-        float angle = Mathf.Atan2(lookDirecton.y, lookDirecton.x) * Mathf.Rad2Deg - 90f;
+        player.MovePosition(player.position + movement * moveSpeed * Time.fixedDeltaTime);
+        gun.position = player.position;
     }
 }
