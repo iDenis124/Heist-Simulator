@@ -9,7 +9,7 @@ public class bullet : MonoBehaviour
     void Update()
     {
         timeAlive += Time.deltaTime;
-        if (timeAlive >= 5f)
+        if (timeAlive >= 2f)
         {
             Destroy(gameObject);
         }
@@ -17,6 +17,10 @@ public class bullet : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.transform.tag == "Enemy")
+        {
+            collision.gameObject.GetComponent<enemy>().TakeDamage(20);
+        }
         Destroy(gameObject);
     }
 }

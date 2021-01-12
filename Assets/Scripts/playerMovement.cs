@@ -34,7 +34,6 @@ public class playerMovement : MonoBehaviour
     private float lastBullet;
     private float moveSpeed;
 
-
     void Update()
     {
         movement.x = Input.GetAxisRaw("Horizontal");
