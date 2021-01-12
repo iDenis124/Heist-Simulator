@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class enemy : MonoBehaviour
 {
+    public bool invincible = false;
     private int health = 100;
 
     void Update()
@@ -16,6 +17,6 @@ public class enemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        health -= damage;
+        if (!invincible) health -= damage;
     }
 }
