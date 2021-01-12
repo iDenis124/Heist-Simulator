@@ -19,13 +19,14 @@ public class playerMovement : MonoBehaviour
 
     [Header("Gun")]
     public float fireRate = 0.3f;
+    public float bulletForce = 20f;
 
     [Space]
     public Rigidbody2D player;
     public Rigidbody2D gun;
     public GameObject gunTip;
+    public GameObject bulletPrefab;
     public Camera cam;
-    public LineRenderer lineRend;
 
     Vector2 movement;
     Vector2 mousePosition;
@@ -33,11 +34,6 @@ public class playerMovement : MonoBehaviour
     private float lastBullet;
     private float moveSpeed;
 
-    void Start()
-    {
-        lineRend = GetComponent<LineRenderer>();
-        lineRend.positionCount = 2;
-    }
 
     void Update()
     {
@@ -45,11 +41,10 @@ public class playerMovement : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
         lastBullet += Time.deltaTime;
         lastDash += Time.deltaTime;
-    
+
         mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
         Vector2 lookDirecton = mousePosition - player.position;
-        // Vector2 bulletTraceEnd = Vector2.Lerp(gunTip.transform.position, mousePosition, Time.deltaTime);
         float angle = Mathf.Atan2(lookDirecton.y, lookDirecton.x) * Mathf.Rad2Deg;
 
         gun.rotation = angle;
@@ -68,20 +63,16 @@ public class playerMovement : MonoBehaviour
 
         if (Input.GetMouseButton(0) && lastBullet > fireRate)
         {
+            Shoot();
             lastBullet = 0;
-            lineRend.SetPosition(0, gunTip.transform.position);
-            lineRend.SetPosition(1, mousePosition);
         }
+    }
 
-        // if (Input.GetKey(KeyCode.Space) && lastDash > dashCooldown)
-        // {
-        //     if (movement != Vector2.zero)
-        //     {
-        //         lastDash = 0;
-        //         player.MovePosition(player.position + movement * dashStrenght * Time.fixedDeltaTime);
-        //     }
-        // }
-
+    void Shoot()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, gunTip.transform.position, gunTip.transform.rotation);
+        Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
+        rbBullet.AddForce(gunTip.transform.up * bulletForce, ForceMode2D.Impulse);
     }
 
     void FixedUpdate()
