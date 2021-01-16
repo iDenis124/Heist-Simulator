@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class playerMovement : MonoBehaviour
@@ -26,6 +24,7 @@ public class playerMovement : MonoBehaviour
 
     Vector2 movement;
     Vector2 mousePosition;
+    Vector2 gunInaccuracy;
     private float lastBullet;
     private float moveSpeed;
 
@@ -54,13 +53,15 @@ public class playerMovement : MonoBehaviour
 
     void Shoot()
     {
-
         if (Input.GetMouseButton(0) && lastBullet > fireRate)
         {
             lastBullet = 0;
             GameObject bullet = Instantiate(bulletPrefab, gunTip.transform.position, gunTip.transform.rotation);
             Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
-            rbBullet.AddForce(gunTip.transform.up * bulletForce, ForceMode2D.Impulse);
+            Vector3 shootAngle = gunTip.transform.up;
+            shootAngle.x += Random.Range(gunInaccuracy.x, gunInaccuracy.y);
+            shootAngle.y += Random.Range(gunInaccuracy.x, gunInaccuracy.y);
+            rbBullet.AddForce(shootAngle * bulletForce, ForceMode2D.Impulse);
         }
     }
 
@@ -68,11 +69,15 @@ public class playerMovement : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            gunInaccuracy.x = -0.1f;
+            gunInaccuracy.y = 0.1f;
             moveSpeed = runningSpeed;
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, runningSize, Time.deltaTime * zoomSpeed);
         }
         else
         {
+            gunInaccuracy.x = -0.07f;
+            gunInaccuracy.y = 0.07f;
             moveSpeed = defaultMoveSpeed;
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, normalSize, Time.deltaTime * zoomSpeed);
         }

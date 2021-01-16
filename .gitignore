@@ -21,6 +21,14 @@
 
 # Visual Studio cache directory
 .vs/
+.vscode/
+
+# Other shit
+/Assets/AstarPathfindingProject/
+/Assets/_TerrainAutoUpgrade/
+/Logs/
+/out/
+.gitignore
 
 # Gradle cache directory
 .gradle/
